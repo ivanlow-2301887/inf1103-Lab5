@@ -18,7 +18,16 @@ def load_inventory(filename=INVENTORY_FILE):
     else:
         print(f"{filename} not found. Starting with an empty inventory.")
         return []
-    
+
+def save_inventory(inventory, filename=INVENTORY_FILE):
+    print("Saving inventory...")
+    try:
+        with open(filename, "w") as file:
+            json.dump(inventory, file, indent=4)
+        print(f"Inventory saved successfully to {filename}.")
+    except OSError as error:
+        print(f"Error saving inventory: {error}")
+
 def display_all(inventory):
     print("\nCurrent Inventory")
     if not inventory:
@@ -89,7 +98,8 @@ def main():
         print("2. Add Product")
         print("3. Update Stock")
         print("4. Search Product")
-        print("5. Exit")
+        print("5. Save Inventory")
+        print("6. Exit")
         print("----------------------")
         option = input("Enter option: ").strip()
 
@@ -102,6 +112,10 @@ def main():
         elif option == "4":
             search_product(inventory)
         elif option == "5":
+            save_inventory(inventory)
+        elif option == "6":
+            print("Saving inventory before exit...")
+            save_inventory(inventory)
             print("Thank you for using Inventory Management System. Program terminated.")
             break
         else:
