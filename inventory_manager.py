@@ -1,0 +1,82 @@
+# inventory_manager.py - Stage 1
+
+def display_all(inventory):
+    print("\nCurrent Inventory")
+    for product in inventory:
+        print(f"ID: {product['id']} | Name: {product['name']} | Price: ${product['price']:.2f} | Stock: {product['stock']}")
+
+def add_product(inventory):
+    print("\nAdd New Product")
+    product_id = input("Product ID: ").strip()
+    name = input("Product Name: ").strip()
+    price = float(input("Price: "))
+    stock = int(input("Stock Quantity: "))
+    inventory.append({"id": product_id, "name": name, "price": price, "stock": stock})
+    print("Product added successfully!")
+
+def update_stock(inventory):
+    print("\nUpdate Stock")
+    product_id = input("Enter Product ID: ").strip()
+    for product in inventory:
+        if product['id'].lower() == product_id.lower():
+            print(f"\nProduct Found:")
+            print(f"Name: {product['name']}")
+            print(f"Current Stock: {product['stock']}")
+            new_stock = int(input("\nNew Stock Quantity: "))
+            product['stock'] = new_stock
+            print("Stock updated successfully!")
+            return
+    print("Product not found.")
+
+def search_product(inventory):
+    print("\nSearch Product")
+    product_id = input("Enter Product ID: ").strip()
+    for product in inventory:
+        if product['id'].lower() == product_id.lower():
+            print("\nProduct Found")
+            print(f"ID: {product['id']}")
+            print(f"Name: {product['name']}")
+            print(f"Price: ${product['price']:.2f}")
+            print(f"Stock: {product['stock']}")
+            return
+    print("Product not found.")
+
+def main():
+
+    print("\n===================================")
+    print("INVENTORY MANAGEMENT SYSTEM")
+    print("===================================")
+
+    # Start with a few products
+    inventory = [
+        {"id": "P001", "name": "Laptop", "price": 1200.00, "stock": 15},
+        {"id": "P002", "name": "Mouse", "price": 25.50, "stock": 40},
+        {"id": "P003", "name": "Keyboard", "price": 45.00, "stock": 25},
+    ]
+
+    while True:
+        print("\n---------MENU---------")
+        print("1. Display All Products")
+        print("2. Add Product")
+        print("3. Update Stock")
+        print("4. Search Product")
+        print("5. Exit")
+        print("----------------------")
+        option = input("Enter option: ").strip()
+
+        if option == "1":
+            display_all(inventory)
+        elif option == "2":
+            add_product(inventory)
+        elif option == "3":
+            update_stock(inventory)
+        elif option == "4":
+            search_product(inventory)
+        elif option == "5":
+            print("Thank you for using Inventory Management System. Program terminated.")
+            break
+        else:
+            print("Invalid option. Please choose 1-5.")
+
+if __name__ == "__main__":
+    main()
