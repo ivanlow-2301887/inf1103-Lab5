@@ -1,16 +1,45 @@
-# inventory_manager.py - Stage 1
+import json
+import os
 
+file_name = "inventory.json"
+INVENTORY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), file_name)
+
+def load_inventory(filename=INVENTORY_FILE):
+    if os.path.exists(filename):
+        try:
+            with open(filename, "r") as file:
+                inventory = json.load(file)
+            print(f"{file_name} found. Inventory loaded successfully.")
+            return inventory
+        except (json.JSONDecodeError, OSError) as error:
+            print(f"Error loading {filename}: {error}")
+            print("Starting with an empty inventory.")
+            return []
+    else:
+        print(f"{filename} not found. Starting with an empty inventory.")
+        return []
+    
 def display_all(inventory):
     print("\nCurrent Inventory")
+    if not inventory:
+        print("No products in inventory.")
+        return
     for product in inventory:
         print(f"ID: {product['id']} | Name: {product['name']} | Price: ${product['price']:.2f} | Stock: {product['stock']}")
 
 def add_product(inventory):
     print("\nAdd New Product")
     product_id = input("Product ID: ").strip()
+    if any(p['id'].lower() == product_id.lower() for p in inventory):
+        print("Product ID already exists.")
+        return
     name = input("Product Name: ").strip()
-    price = float(input("Price: "))
-    stock = int(input("Stock Quantity: "))
+    try:
+        price = float(input("Price: "))
+        stock = int(input("Stock Quantity: "))
+    except ValueError:
+        print("Invalid price or stock quantity. Product not added.")
+        return
     inventory.append({"id": product_id, "name": name, "price": price, "stock": stock})
     print("Product added successfully!")
 
@@ -22,7 +51,12 @@ def update_stock(inventory):
             print(f"\nProduct Found:")
             print(f"Name: {product['name']}")
             print(f"Current Stock: {product['stock']}")
-            new_stock = int(input("\nNew Stock Quantity: "))
+            
+            try:
+                new_stock = int(input("\nNew Stock Quantity: "))
+            except ValueError:
+                print("Invalid stock quantity.")
+                return
             product['stock'] = new_stock
             print("Stock updated successfully!")
             return
@@ -47,12 +81,7 @@ def main():
     print("INVENTORY MANAGEMENT SYSTEM")
     print("===================================")
 
-    # Start with a few products
-    inventory = [
-        {"id": "P001", "name": "Laptop", "price": 1200.00, "stock": 15},
-        {"id": "P002", "name": "Mouse", "price": 25.50, "stock": 40},
-        {"id": "P003", "name": "Keyboard", "price": 45.00, "stock": 25},
-    ]
+    inventory = load_inventory()
 
     while True:
         print("\n---------MENU---------")
